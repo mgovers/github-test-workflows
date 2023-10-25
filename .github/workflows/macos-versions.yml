@@ -1,0 +1,25 @@
+name: MacOS versions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  macos-xcode-version:
+    name: Check MacOS XCode version
+    strategy:
+      matrix:
+        image: [macos-latest, macos-13]
+        xcode: [default, latest-stable]
+    runs-on: ${{ matrix.image }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup XCode
+        if: matrix.xcode != 'default'
+        uses: setup-xcode-version
+        with:
+          xcode-version: ${{ matrix.xcode }}
+
+      - run: cmake -S . -B build/
+      - run: cmake --build build/

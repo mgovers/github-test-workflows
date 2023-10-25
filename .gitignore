@@ -1,0 +1,6 @@
+# build targets
+build/
+install/
+
+# editors
+.vscode
