@@ -15,11 +15,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup XCode
-        if: matrix.xcode != 'default'
-        uses: maxim-lobanov/setup-xcode-version@v1
+      - if: matrix.xcode != 'default'
+        uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: ${{ matrix.xcode }}
 
-      - run: cmake -S . -B build/
+      - name: Install cpp dependencies
+        run: brew install ninja
+
+      - run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX="install"
       - run: cmake --build build/
+      - run: cmake --build build/ --target install
+      - run: install/bin/simple
